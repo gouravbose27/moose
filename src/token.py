@@ -17,21 +17,33 @@ class TokenType:
     # Operators
     ASSIGN = '='
     PLUS = '+'
+    MINUS = '-'
+    BANG = '!'
+    SLASH = '/'
+    ASTERISK = '*'
+    LT = '<'
+    GT = '>'
+    EQ = '=='
+    NOT_EQ = '!='
 
     # Delimiters
     COMMA = ','
-    SEMICOLON = ';'
     COLON = ':'
     LPAREN = '('
     RPAREN = ')'
     LBRACE = '{'
     RBRACE = '}'
 
-    # Keywords
+    # Keywords / Reserved words
     FUNCTION = 'FUNCTION'
     LET = 'LET'
     DEF = 'DEF'
     RETURN = 'RETURN'
+    IF = 'IF'
+    ELSE = 'ELSE'
+    ELIF = 'ELIF'
+    TRUE = 'TRUE'
+    FALSE = 'FALSE'
 
 class Token:
     def __init__(self, type = None | TokenType, literal =  None | str):
@@ -42,10 +54,16 @@ class Token:
         return f"Token({self.type}, {self.literal})"
 
 
-
+# Keywords / Reserved words
 KEYWORDS = {
     "let": TokenType.LET,
     "def": TokenType.DEF,
     "return": TokenType.RETURN,
+    "if": TokenType.IF,
+    "else": TokenType.ELSE,
+    "elif": TokenType.ELIF,
+    "true": TokenType.TRUE,
+    "false": TokenType.FALSE
+    
 }
 
