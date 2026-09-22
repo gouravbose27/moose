@@ -3,7 +3,8 @@ Lexer for the Moose project
 Handles tokenization of source code
 
 '''
-from .token import *
+
+from token.token import *
 
 class Lexer:
     def __init__(self, input: str):
@@ -105,12 +106,13 @@ def next_token(lexer: Lexer) -> Token:
     return token
 
 # Check if the character is a letter or underscore
-def is_letter(ch: str) -> bool:
-    return ch.isalpha() or ch == '_'
+def is_letter(ch: str | None) -> bool:
+    return ch is not None and (ch.isalpha() or ch == '_')
+
 
 # Check if the character is a number
-def is_number(ch: str) -> bool:
-    return ch.isdigit()
+def is_number(ch: str | None) -> bool:
+    return ch is not None and ch.isdigit()
 
 # Create a new lexer instance with the given input
 def new_lexer(input: str) -> Lexer:
