@@ -13,12 +13,22 @@ from token.token import *
 class Parser:
     def __init__(self, lexer: Lexer):
         self.lexer = lexer
-        self.current_token = next_token(lexer)
-        self.peek_token = next_token(lexer)
+        self.current_token = None
+        self.peek_token = next_token(self.lexer)
 
     def next_token(self):
         self.current_token = self.peek_token
         self.peek_token = next_token(self.lexer)
-        return self.current_token
+
+
+def new_parser(lexer: Lexer) -> Parser:
+    parser = Parser(lexer=lexer)
+    parser.next_token()
+    return parser
+
+def parse_program(parser: Parser) -> Program:
+    # Implement the parsing logic for the program here
+    
+    return None
 
     
