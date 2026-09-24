@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "moose"
+version = "0.1.0"
+description = "Moose: a minimal Python-inspired tree-walking interpreter (learning project)"
+requires-python = ">=3.13"
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+moose = "moose.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["moose*"]
