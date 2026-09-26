@@ -1,6 +1,7 @@
 # Loads grammar.lark into a Lark parser and exposes parse(source) -> AST (via ast_builder).
 
 from lark import Lark, Tree
+from .ast_nodes import Program
 from lark.exceptions import UnexpectedInput
 import pathlib
 from . import ast_builder
@@ -18,7 +19,7 @@ def parse(source: str) -> Tree:
 
 
 
-def parse_program(source: str):
+def parse_program(source: str)-> Program:
     try:
         tree = parse(source)
         return ast_builder.ASTBuilder().transform(tree)
