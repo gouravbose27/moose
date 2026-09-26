@@ -1,68 +1,40 @@
-// Lark grammar for moose: terminals + rules per docs/PLAN.md grammar sketch (Phase 1).
-// Left-recursive + aliased rules (not repeated-operator groups): Lark's LALR parser wants
-// left recursion, and anonymous string-literal tokens (keywords, operators, punctuation) are
-// elided from the tree, so each alternative needs its own alias for ast_builder.py to tell
-// operators apart. `block`/`params`/`arguments` are always-wrapped (non-"?") sub-rules so
-// their statement/name/expression lists don't flatten into their parent's children.
+start: code_block
 
-?start: block
+    code_block: statement*
 
-block: _NEWLINE* (statement _NEWLINE*)*
+    statement: let_statement
+             | function_definition
+             | return_statement
+             | display_statement
+             | if_statement
 
-?statement: if_stmt | func_def | return_stmt | assignment | expr_stmt
+    let_statement: "let" NAME "=" expr
 
-if_stmt: "if" expression ":" block ("else" ":" block)? "end"
-func_def: "def" NAME "(" params ")" ":" block "end"
-params: (NAME ("," NAME)*)?
-return_stmt: "return" expression?
-assignment: "let" NAME "=" expression
-expr_stmt: expression
+    function_definition: "def" NAME "(" [args] ")" ":" statement* "end"
 
-?expression: or_expr
+    display_statement: "display" "(" expr ")"
 
-?or_expr: and_expr
-        | or_expr "or" and_expr     -> or_
+    if_statement: "if" expr ":" statement* ("else" ":" statement*)? "end"
 
-?and_expr: not_expr
-         | and_expr "and" not_expr  -> and_
+    args: expr ("," expr)*
 
-?not_expr: comparison
-         | "not" not_expr           -> not_
+    call: NAME "(" [args] ")"
+    
+ 
 
-?comparison: term
-           | comparison "==" term   -> eq
-           | comparison "!=" term   -> ne
-           | comparison "<" term    -> lt
-           | comparison ">" term    -> gt
-           | comparison "<=" term   -> le
-           | comparison ">=" term   -> ge
+    expr: DEC_NUMBER -> number
+        | STRING -> string
+        | "true" -> boolean_true
+        | "false" -> boolean_false
+        | call -> call
+        | NAME -> name
 
-?term: factor
-     | term "+" factor -> add
-     | term "-" factor -> sub
 
-?factor: unary
-       | factor "*" unary -> mul
-       | factor "/" unary -> div
-       | factor "%" unary -> mod
-
-?unary: call
-      | "-" unary -> neg
-
-?call: primary
-     | call "(" arguments ")" -> call
-
-arguments: (expression ("," expression)*)?
-
-?primary: NUMBER            -> number
-        | "true"            -> true
-        | "false"           -> false
-        | NAME              -> variable
-        | "(" expression ")"
-
-NAME: /[a-zA-Z_][a-zA-Z0-9_]*/
-NUMBER: /\d+(\.\d+)?/
-_NEWLINE: /(\r?\n)+/
-COMMENT: /#[^\n]*/
-%ignore /[ \t]+/
-%ignore COMMENT
+    return_statement: "return" expr
+    COMMENT: /#.*/
+    NEWLINE: /(\r?\n)+/
+    %ignore COMMENT
+    %ignore NEWLINE
+    %import python (NAME, DEC_NUMBER, STRING)
+    %import common.WS
+    %ignore WS
