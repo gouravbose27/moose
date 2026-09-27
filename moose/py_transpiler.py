@@ -39,6 +39,25 @@ def transpile(node, indent=0):
 
         return "\n".join(lines)
 
+    if isinstance(node, FunctionDefinition):
+        lines = [
+            f"def {node.name}({', '.join(node.args) if node.args else ''}):"
+        ]
+        if not hasattr(node.body, "__iter__"):
+            lines.append(f"{transpile(node.body, indent + 4)}")
+        else:
+            lines.extend(
+                transpile(statement, indent + 4)
+                for statement in node.body
+            )
+        return "\n".join(lines)
+
+    if isinstance(node, CallStatement):
+        return f"{transpile(node.body)}"
+
+    if isinstance(node, Call):
+        return f"{node.name}({', '.join(transpile(arg) for arg in node.args) if node.args else ''})"
+    
     if isinstance(node, Number):
         return str(node.value)
 

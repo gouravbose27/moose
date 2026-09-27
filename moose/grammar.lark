@@ -7,6 +7,7 @@ start: code_block
              | return_statement
              | display_statement
              | if_statement
+             | call_statement
 
     let_statement: "let" NAME "=" expr
 
@@ -16,9 +17,12 @@ start: code_block
 
     if_statement: "if" expr ":" statement* ("else" ":" statement*)? "end"
 
+    call_statement: call
+
     args: expr ("," expr)*
 
     call: NAME "(" [args] ")"
+
     
  
 

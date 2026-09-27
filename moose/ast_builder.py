@@ -30,6 +30,13 @@ class ToAst(Transformer):
     def if_statement(self, condition, body, orelse=None):
         return IfStatement(condition=condition, body=list(body), orelse=list(orelse) if orelse else None)
 
+    def function_definition(self, name, args, *body):
+            return FunctionDefinition(name=name, args=list(args) if args else [], body=list(body))
+    
+    def call_statement(self, body):
+        return CallStatement(body=body)
+    
+
 
 
 

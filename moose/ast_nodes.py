@@ -67,4 +67,22 @@ class IfStatement(_Statement):
     body: List[_Statement]
     orelse: List[_Statement] = None
 
+@dataclass
+class FunctionDefinition(_Statement):
 
+    name: str
+    args: List[str]
+    body: List[_Statement]
+
+
+@dataclass
+class Call(_Expression):
+
+    name: str
+    args: List[_Expression]
+
+
+@dataclass
+class CallStatement(_Statement):
+
+    body: Call
