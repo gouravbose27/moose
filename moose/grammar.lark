@@ -2,39 +2,59 @@ start: code_block
 
     code_block: statement*
 
-    statement: let_statement
+    ?statement: let_statement 
              | function_definition
              | return_statement
              | display_statement
              | if_statement
              | call_statement
+             | whileloop_statement
+             | break_statement
 
-    let_statement: "let" NAME "=" expr
+            
+
+             
+    # Statements
+
+    let_statement: "let" NAME "=" expression
 
     function_definition: "def" NAME "(" [args] ")" ":" statement* "end"
 
-    display_statement: "display" "(" expr ")"
+    display_statement: "display" "(" expression? ")"
 
-    if_statement: "if" expr ":" statement* ("else" ":" statement*)? "end"
+    if_statement: "if" expression ":" statement* ("else" ":" statement*)? "end"
 
-    call_statement: call
+    call_statement: NAME "(" [args] ")"
 
-    args: expr ("," expr)*
+    return_statement: "return" expression
 
-    call: NAME "(" [args] ")"
+    args: expression ("," expression)*
+
+    whileloop_statement: "while" expression ":" statement* "end"
+    
+    break_statement: "break"
 
     
  
+    # Expressions
 
-    expr: DEC_NUMBER -> number
+    expression: DEC_NUMBER -> number
         | STRING -> string
         | "true" -> boolean_true
         | "false" -> boolean_false
-        | call -> call
+        | NAME "(" [args] ")" -> call_statement 
         | NAME -> name
+        | expression OP expression -> binary_operation
+        | expression COMPARISON_OP expression -> comparison_operation
 
 
-    return_statement: "return" expr
+    # Operators    
+    OP: "+" | "-" | "*" | "/"
+
+    COMPARISON_OP: "==" | "!=" | "<" | "<=" | ">" | ">="
+
+
+
     COMMENT: /#.*/
     NEWLINE: /(\r?\n)+/
     %ignore COMMENT

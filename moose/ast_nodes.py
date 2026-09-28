@@ -1,6 +1,6 @@
 from lark import ast_utils
 from typing import List
-from dataclasses import dataclass
+from dataclasses import dataclass,field
 from lark.tree import Meta
 
 
@@ -69,20 +69,45 @@ class IfStatement(_Statement):
 
 @dataclass
 class FunctionDefinition(_Statement):
-
     name: str
-    args: List[str]
-    body: List[_Statement]
+    args: List[str] = field(default_factory=list)
+    body: List[_Statement] = field(default_factory=list)
 
+    def __init__(self, name: str, args=None, *body):
+        self.name = name
+        self.args = list(args) if args else []
+        self.body = list(body)
 
-@dataclass
-class Call(_Expression):
-
-    name: str
-    args: List[_Expression]
 
 
 @dataclass
 class CallStatement(_Statement):
 
-    body: Call
+    name: str
+    args: List[_Expression] = None
+
+@dataclass
+class ReturnStatement(_Statement):
+    value: _Expression
+
+@dataclass
+class BinaryOperation(_Expression):
+    left: _Expression
+    op: str
+    right: _Expression
+
+@dataclass
+class ComparisonOperation(_Expression):
+    left: _Expression
+    op: str
+    right: _Expression
+
+
+@dataclass
+class WhileLoopStatement(_Statement):
+    condition: _Expression
+    body: List[_Statement]
+
+@dataclass
+class BreakStatement(_Statement):
+    pass
